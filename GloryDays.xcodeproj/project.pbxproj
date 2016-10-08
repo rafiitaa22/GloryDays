@@ -310,6 +310,7 @@
 				05F960B71DA0264700FFA25D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
