@@ -11,6 +11,9 @@ import AVFoundation
 import Photos
 import Speech
 
+import CoreSpotlight
+import MobileCoreServices
+
 
 private let reuseIdentifier = "cell"
 
@@ -315,6 +318,7 @@ class MemoriesCollectionViewController: UICollectionViewController, UIImagePicke
             
             if result.isFinal {
                 let text = result.bestTranscription.formattedString
+                self.indexMemory(memory: memory, text: text)
                 do{
                     try text.write(to: transcription, atomically: true, encoding: String.Encoding.utf8)
                 }catch{
@@ -325,6 +329,24 @@ class MemoriesCollectionViewController: UICollectionViewController, UIImagePicke
         
         
         
+        
+    }
+    
+    func indexMemory(memory: URL, text: String){
+        let attributeSet = CSSearchableItemAttributeSet(itemContentType: kUTTypeText as String)
+        attributeSet.title = "Recuerdo de Glory Days"
+        attributeSet.contentDescription = text
+        
+        let item = CSSearchableItem(uniqueIdentifier: memory.path, domainIdentifier: "com.rafalarrosa", attributeSet: attributeSet)
+        item.expirationDate = Date.distantFuture
+        
+        CSSearchableIndex.default().indexSearchableItems([item]) { (error) in
+            if let error = error{
+                print("Ha habido un problema al indexar en Spotlight")
+            }else{
+                print("Hemos podido indexar correctamente el texto en Spotlight")
+            }
+        }
         
     }
     
